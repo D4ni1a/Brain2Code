@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Test Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e2e8f0;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(26, 32, 44, 0.95);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid #4c51bf;
+            backdrop-filter: blur(10px);
+        }
+        .results-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #4c51bf;
+        }
+        .results-header h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+        }
+        .user-id {
+            color: #a0aec0;
+            font-size: 1.3em;
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            border: 6px solid #4c51bf;
+            background: rgba(26, 32, 44, 0.9);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            color: #667eea;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        .stat-card {
+            background: rgba(45, 55, 72, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #4c51bf;
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #ffffff;
+        }
+        .stat-label {
+            color: #a0aec0;
+            font-size: 1.1em;
+        }
+        .cefr-result {
+            text-align: center;
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(45, 55, 72, 0.8);
+            border-radius: 15px;
+            border: 2px solid #4c51bf;
+        }
+        .cefr-level {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #68d391;
+            margin-bottom: 15px;
+        }
+        .cefr-description {
+            font-size: 1.2em;
+            color: #cbd5e0;
+            line-height: 1.6;
+        }
+        .level-breakdown {
+            margin: 40px 0;
+        }
+        .breakdown-title {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .level-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .level-stat {
+            background: rgba(45, 55, 72, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid;
+        }
+        .a1-stat { border-color: #48bb78; }
+        .a2-stat { border-color: #38b2ac; }
+        .b1-stat { border-color: #4299e1; }
+        .b2-stat { border-color: #9f7aea; }
+        .c1-stat { border-color: #ed8936; }
+        .answers-summary {
+            margin-top: 50px;
+        }
+        .summary-title {
+            border-bottom: 3px solid #4c51bf;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            color: #ffffff;
+            font-size: 1.8em;
+        }
+        .answer-item {
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid;
+            background: rgba(45, 55, 72, 0.8);
+            transition: transform 0.3s ease;
+        }
+        .answer-item:hover {
+            transform: translateX(5px);
+        }
+        .correct { 
+            border-left-color: #68d391;
+            background: rgba(104, 211, 145, 0.1);
+        }
+        .incorrect { 
+            border-left-color: #fc8181;
+            background: rgba(252, 129, 129, 0.1);
+        }
+        .question-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .question-text {
+            font-weight: 600;
+            color: #ffffff;
+            font-size: 1.2em;
+            flex: 1;
+        }
+        .cefr-tag {
+            padding: 5px 12px;
+            background: rgba(76, 81, 191, 0.3);
+            border: 1px solid #4c51bf;
+            border-radius: 15px;
+            font-size: 0.9em;
+            color: #a0aec0;
+            margin-left: 15px;
+        }
+        .answer-details {
+            font-size: 1.1em;
+            color: #cbd5e0;
+        }
+        .user-answer {
+            margin: 10px 0;
+            padding: 12px;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 8px;
+        }
+        .correct-answer {
+            margin: 10px 0;
+            padding: 12px;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 8px;
+            border: 1px solid #68d391;
+        }
+        .explanation {
+            margin: 10px 0;
+            padding: 12px;
+            background: rgba(76, 81, 191, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #4c51bf;
+            font-style: italic;
+        }
+        .restart-btn {
+            background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%);
+            color: white;
+            padding: 20px 50px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-top: 40px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(76, 81, 191, 0.3);
+        }
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(76, 81, 191, 0.4);
+            background: linear-gradient(135deg, #434190 0%, #5a67d8 100%);
+        }
+        .center {
+            text-align: center;
+        }
+        .percentage {
+            font-size: 1.4em;
+            color: #a0aec0;
+            margin: 15px 0;
+        }
+        .percentage-value {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 1.6em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="results-header">
+            <h1>English Proficiency Test Results</h1>
+            <p class="user-id">User ID: <strong>{{ results.user_id }}</strong></p>
+        </div>
+
+        <div class="center">
+            <div class="score-circle">
+                {{ results.score }}/{{ results.total_questions }}
+            </div>
+            
+            <div class="cefr-result">
+                <div class="cefr-level">{{ results.cefr_level }}</div>
+                <div class="cefr-description">{{ results.level_description }}</div>
+            </div>
+            
+            <div class="percentage">
+                Success Rate: <span class="percentage-value">{{ "%.1f"|format((results.score / results.total_questions * 100)) }}%</span>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Correct Answers</div>
+                <div class="stat-value">{{ results.score }}</div>
+                <div class="stat-label">out of {{ results.total_questions }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Test Duration</div>
+                <div class="stat-value">{{ results.duration_seconds }}s</div>
+                <div class="stat-label">{{ (results.duration_seconds // 60) }}m {{ results.duration_seconds % 60 }}s</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Completion Time</div>
+                <div class="stat-value" style="font-size: 0.9em;">
+                    {{ results.start_time[:16].replace('T', ' ') }}
+                </div>
+            </div>
+        </div>
+
+        <div class="level-breakdown">
+            <h3 class="breakdown-title">📊 Performance by CEFR Level</h3>
+            <div class="level-stats">
+                <div class="level-stat a1-stat">
+                    <div style="font-weight: bold; color: #48bb78;">A1</div>
+                    <div style="font-size: 1.5em; margin: 8px 0;">{{ results.level_stats.get('A1', 0) }}/3</div>
+                    <div style="font-size: 0.8em; color: #a0aec0;">Beginner</div>
+                </div>
+                <div class="level-stat a2-stat">
+                    <div style="font-weight: bold; color: #38b2ac;">A2</div>
+                    <div style="font-size: 1.5em; margin: 8px 0;">{{ results.level_stats.get('A2', 0) }}/3</div>
+                    <div style="font-size: 0.8em; color: #a0aec0;">Elementary</div>
+                </div>
+                <div class="level-stat b1-stat">
+                    <div style="font-weight: bold; color: #4299e1;">B1</div>
+                    <div style="font-size: 1.5em; margin: 8px 0;">{{ results.level_stats.get('B1', 0) }}/4</div>
+                    <div style="font-size: 0.8em; color: #a0aec0;">Intermediate</div>
+                </div>
+                <div class="level-stat b2-stat">
+                    <div style="font-weight: bold; color: #9f7aea;">B2</div>
+                    <div style="font-size: 1.5em; margin: 8px 0;">{{ results.level_stats.get('B2', 0) }}/5</div>
+                    <div style="font-size: 0.8em; color: #a0aec0;">Upper-Intermediate</div>
+                </div>
+                <div class="level-stat c1-stat">
+                    <div style="font-weight: bold; color: #ed8936;">C1</div>
+                    <div style="font-size: 1.5em; margin: 8px 0;">{{ results.level_stats.get('C1', 0) }}/5</div>
+                    <div style="font-size: 0.8em; color: #a0aec0;">Advanced</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="answers-summary">
+            <h3 class="summary-title">📝 Detailed Answers</h3>
+            {% for answer in results.answers %}
+            <div class="answer-item {{ 'correct' if answer.is_correct else 'incorrect' }}">
+                <div class="question-header">
+                    <div class="question-text">Question {{ answer.question_id }}: {{ answer.question }}</div>
+                    <div class="cefr-tag">CEFR: {{ answer.cefr_level }}</div>
+                </div>
+                <div class="answer-details">
+                    <div class="user-answer">
+                        <strong>Your answer:</strong> 
+                        {% if answer.user_answer is not none %}
+                            {{ answer.options[answer.user_answer] }}
+                        {% else %}
+                            <span style="color: #fc8181;">No answer provided</span>
+                        {% endif %}
+                    </div>
+                    {% if not answer.is_correct %}
+                    <div class="correct-answer">
+                        <strong>Correct answer:</strong> {{ answer.options[answer.correct_answer] }}
+                    </div>
+                    {% endif %}
+                    <div class="explanation">
+                        <strong>Explanation:</strong> {{ answer.explanation }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="center">
+            <a href="/" class="restart-btn">🔄 Take Test Again</a>
+        </div>
+    </div>
+</body>
+</html>
