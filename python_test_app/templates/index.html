@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Proficiency Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e2e8f0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(26, 32, 44, 0.95);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid #4c51bf;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            text-align: center;
+            color: #a0aec0;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+        .instructions {
+            background: rgba(45, 55, 72, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 4px solid #4c51bf;
+        }
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        .instructions ul {
+            list-style: none;
+            padding: 0;
+        }
+        .instructions li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #cbd5e0;
+            font-size: 1.1em;
+        }
+        .instructions li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: #4c51bf;
+            font-size: 0.9em;
+        }
+        .form-group {
+            margin: 30px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #a0aec0;
+            font-size: 1.1em;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 18px 20px;
+            background: rgba(45, 55, 72, 0.8);
+            border: 2px solid #4c51bf;
+            border-radius: 12px;
+            font-size: 1.1em;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+            background: rgba(45, 55, 72, 1);
+        }
+        input[type="text"]::placeholder {
+            color: #718096;
+        }
+        button {
+            background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%);
+            color: white;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(76, 81, 191, 0.3);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(76, 81, 191, 0.4);
+            background: linear-gradient(135deg, #434190 0%, #5a67d8 100%);
+        }
+        .test-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .info-card {
+            background: rgba(45, 55, 72, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #4c51bf;
+        }
+        .info-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .info-card p {
+            color: #a0aec0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Python Proficiency Test</h1>
+        <div class="subtitle">Assess your Python skills and discover your developer level</div>
+        
+        <div class="test-info">
+            <div class="info-card">
+                <h4>📝 25 Questions</h4>
+                <p>Comprehensive assessment</p>
+            </div>
+            <div class="info-card">
+                <h4>⏱️ Timed</h4>
+                <p>Duration recorded</p>
+            </div>
+            <div class="info-card">
+                <h4>🎯 Instant Results</h4>
+                <p>Junior, Middle, or Senior</p>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 Test Instructions</h3>
+            <ul>
+                <li><strong>25 questions</strong> to assess your Python knowledge</li>
+                <li>One question per page - no going back</li>
+                <li>No time limit, but duration is recorded</li>
+                <li>Results are saved automatically</li>
+                <li>Choose the single best answer for each question</li>
+            </ul>
+        </div>
+
+        <form method="POST" action="/start">
+            <div class="form-group">
+                <label for="user_id">Enter your User ID:</label>
+                <input type="text" id="user_id" name="user_id" required 
+                       placeholder="e.g., john_doe_123">
+            </div>
+            
+            <button type="submit">🚀 Start Test</button>
+        </form>
+    </div>
+</body>
+</html>
