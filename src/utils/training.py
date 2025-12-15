@@ -117,3 +117,131 @@ def test_epoch(model, classifier, test_loader, loss_fn, device):
 
     return avg_test_loss, avg_test_cosine_sim
 
+def run_experiment(model, classifier, train_loader, test_loader, num_epochs=25,
+                   learning_rate=0.001, checkpoint_dir='checkpoints', device=None):
+    """
+    Run the complete training and evaluation experiment.
+
+    Args:
+        model: The main model
+        classifier: The classifier head
+        train_loader: DataLoader for training data
+        test_loader: DataLoader for test data
+        num_epochs: Number of training epochs
+        learning_rate: Learning rate for optimizer
+        checkpoint_dir: Directory to save model checkpoints
+        device: Device to run computations on (CPU/GPU). If None, auto-detects.
+
+    Returns:
+        Dictionary with training history
+    """
+    # Set device
+    if device is None:
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(f"Using device: {device}")
+
+    # Move models to device
+    model = model.to(device)
+    classifier = classifier.to(device)
+
+    # Initialize loss function and optimizer
+    # loss_fn = torch.nn.CosineEmbeddingLoss(margin=0.0, reduction='mean')
+    loss_fn = nn.MSELoss()
+    optimizer = optim.Adam(
+        list(model.parameters()) + list(classifier.parameters()),
+        lr=learning_rate,
+        betas=(0.9, 0.999),
+        eps=1e-8,
+        weight_decay=1e-4
+    )
+
+    # Create checkpoint directory
+    os.makedirs(checkpoint_dir, exist_ok=True)
+
+    # Initialize training history
+    history = {
+        'train_loss': [],
+        'train_cosine_sim': [],
+        'test_loss': [],
+        'test_cosine_sim': [],
+        'best_epoch': 0
+    }
+
+    # Track best model
+    best_test_cosine_sim = -float('inf')
+    test_loss, test_cosine_sim = test_epoch(
+        model, classifier, test_loader, loss_fn, device
+    )
+    history['test_loss'].append(test_loss)
+    history['test_cosine_sim'].append(test_cosine_sim)
+
+
+    # Training loop
+    for epoch in range(num_epochs):
+        print(f"\nEpoch {epoch+1}/{num_epochs}")
+
+        # Training phase
+        train_loss, train_cosine_sim = train_epoch(
+            model, classifier, train_loader, loss_fn, optimizer, device
+        )
+
+        # Testing phase
+        test_loss, test_cosine_sim = test_epoch(
+            model, classifier, test_loader, loss_fn, device
+        )
+
+        # Update history
+        history['train_loss'].append(train_loss)
+        history['train_cosine_sim'].append(train_cosine_sim)
+        history['test_loss'].append(test_loss)
+        history['test_cosine_sim'].append(test_cosine_sim)
+
+        # Print epoch summary
+        print(f"Epoch {epoch+1} Summary:")
+        print(f"  Training - Loss: {train_loss:.4f}, CosSim: {-train_cosine_sim:.4f}")
+        print(f"  Testing  - Loss: {test_loss:.4f}, CosSim: {test_cosine_sim:.4f}")
+
+        # Save best model
+        if test_cosine_sim > best_test_cosine_sim:
+            best_test_cosine_sim = test_cosine_sim
+            history['best_epoch'] = epoch
+
+            checkpoint_path = os.path.join(checkpoint_dir, f'best_model_epoch_{epoch+1}.pt')
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'classifier_state_dict': classifier.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'train_loss': train_loss,
+                'test_loss': test_loss,
+                'test_cosine_sim': test_cosine_sim,
+                'history': history
+            }, checkpoint_path)
+            print(f"  Saved best model to {checkpoint_path}")
+
+    # Save final model
+    final_checkpoint_path = os.path.join(checkpoint_dir, 'final_model.pt')
+    torch.save({
+        'epoch': num_epochs,
+        'model_state_dict': model.state_dict(),
+        'classifier_state_dict': classifier.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'history': history
+    }, final_checkpoint_path)
+    print(f"\nSaved final model to {final_checkpoint_path}")
+
+    return history
+
+
+
+# if __name__ == "__main__":
+#     history = run_experiment(
+#         model=model,
+#         classifier=classifier,
+#         train_loader=all_sets['train_loader'],
+#         test_loader=all_sets['test_loader'],
+#         num_epochs=200,
+#         learning_rate=0.0001,
+#         checkpoint_dir='checkpoints',
+#         device=None  # Auto-detect device
+#     )
