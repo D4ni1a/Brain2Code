@@ -1,1 +1,30 @@
-
+find perimeter of square
+find similar elements from given two tuple lists
+find squares of individual elements in list using lambda function
+count most common words in dictionary
+remove first and last occurrence of given character from string
+find whether given array of integers contains any duplicate element
+find first duplicate element in given array of integers
+convert given binary number to its decimal equivalent
+find element occurring odd number of times
+remove all digits from list of strings
+find largest prime factor of given number
+convert decimal number to binary number
+find missing number in sorted array
+filter even numbers using lambda function
+find sum of repeated elements in given array
+calculate area of parallelogram
+check whether first and last characters of given string are equal or not
+find smallest number in list
+sort list of tuples using lambda
+count positive numbers in list
+merge three dictionaries into single expression
+get frequency of elements in list
+find frequency count of list of lists
+multiply all numbers in list and divide with length of list
+find next smallest palindrome of specified number
+extract every first or specified element from given two dimensional list
+sort given mixed list of integers and strings
+count all substrings starting and ending with same characters
+split string at lowercase letters
+find largest number that can be formed with given digits
